@@ -1,13 +1,23 @@
+import os
+import colorama
+
 from customer import *
 from account import *
 
 class Bank:
     def __init__(self) -> None:
-        print("Welcome to the bank application!")
+        welcome_s = "| Welcome to the bank application! |"
+        print("-" * len(welcome_s))
+        print(welcome_s)
+        print("-" * len(welcome_s))
         self.customers = self._load("./data.txt")
 
     # Reads text file into customer list
     def _load(self, path) -> list:
+        if not os.path.exists(path):
+            self.print_error("Error: No database file found in \"./data.txt\"")
+            self.print_error("Changes made will be written to a new file at the path.")
+            return
         customers = []
         # Open and read file
         file = open(path)
@@ -50,7 +60,7 @@ class Bank:
         if customer:
             customer = customer[1]
             return customer
-        print("Error customer not found!")
+        self.print_error("Error: Customer not found.")
         return -1
 
     # Returns a list of customers information
@@ -78,7 +88,7 @@ class Bank:
             if customer.add_account(account):
                 print(f"Successfully added new account to {customer.name}")
             else:
-                print(f"Error: Could not add new account to {customer.name}")
+                self.print_error(f"Could not add new account to {customer.name}")
 
     # Returns a visual representation of all accounts belonging to customer
     def get_account(ssn, acc_id) -> str:
@@ -99,3 +109,6 @@ class Bank:
     # Returns all transactions from account if it exists
     def get_all_transactions_by_ssn_acc_num(ssn, acc_num) -> str:
         pass
+
+    def print_error(self, s):
+        print(f"{colorama.Fore.RED}{s}{colorama.Style.RESET_ALL}")
