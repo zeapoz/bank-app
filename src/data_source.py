@@ -1,4 +1,4 @@
-from account import *
+from customer import *
 
 class DataSource:
     def __init__(self) -> None:
@@ -17,7 +17,7 @@ class DataSource:
         pass
 
     # Find customer based on id
-    def find_by_id(id) -> Account:
+    def find_by_id(id) -> Customer:
         pass
 
     # Removes customer based on id

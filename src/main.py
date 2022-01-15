@@ -31,7 +31,7 @@ def get_customer_info():
 
 def add_account():
     ssn = input("Enter customers social security number: ")
-    acc_type = input("Enter type of account: ()").strip()
+    acc_type = input("Enter type of account: (debit account)").strip()
     acc_num = input("Enter card number: ")
     account = Account(acc_type, acc_num)
     bank.add_account(ssn, account)
