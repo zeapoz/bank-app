@@ -33,16 +33,16 @@ class Bank:
             ssn = cus_data[2]
             customer = Customer(id, name, ssn)
             customers.append(customer)
-            # Credit information
-            for i in range(len(data[1:])):
+            # Account information
+            for i in range(1, len(data)):
                 acc_data = data[i].split(":")
-                acc_num = acc_data[0]
+                acc_id = acc_data[0]
                 acc_type = acc_data[1]
-                acc_balance = acc_data[2]
-                customer.add_account(Account(acc_type, acc_num, acc_balance))
+                acc_balance = float(acc_data[2])
+                customer.add_account(Account(acc_type, acc_id, acc_balance))
                 # Set increments
                 self.cus_id_increment = int(id) + 1
-                self.acc_num_increment = int(acc_num) + 1
+                self.acc_id_increment = int(acc_id) + 1
         file.close()
         return customers
 
@@ -78,8 +78,8 @@ class Bank:
         # Find customer
         customer = self.get_customer(ssn)
         if customer:
-            # TODO Customer account info getter
-            info = [customer.name, customer.ssn, customer.id, customer.accounts]
+            accounts = [(x.acc_id, x.balance) for x in customer.accounts]
+            info = [customer.name, customer.ssn, accounts]
             return info
 
     # Changes customer name if ssn exists in database
@@ -108,19 +108,37 @@ class Bank:
         pass
 
     # Deposits money into chosen account
-    def deposit(ssn, acc_id, amount) -> bool:
-        pass
+    def deposit(self, ssn, acc_id, amount) -> bool:
+        customer = self.get_customer(ssn)
+        if customer:
+            for acc in customer.accounts:
+                if acc.acc_id == acc_id:
+                    acc.balance += amount
+                    self.print_success(f"{amount} successfully deposited into account id {acc_id} belonging to {customer.name}")
+                    return True
+        return False
 
     # Withdraws money into chosen account
-    def withdraw(ssn, acc_id, amount) -> bool:
-        pass
+    def withdraw(self, ssn, acc_id, amount) -> bool:
+        customer = self.get_customer(ssn)
+        if customer:
+            for acc in customer.accounts:
+                if acc.acc_id == acc_id:
+                    if acc.balance >= amount:
+                        acc.balance -= amount
+                        self.print_success(f"{amount} successfully deposited into account id {acc_id} belonging to {customer.name}")
+                        return True
+                    else:
+                        self.print_error(f"Insufficent funds for account id {acc_id} belonging to {customer.name}")
+                        return False
+        return False
 
     # Closes active account and returns balance of closed account
     def close_account(ssn, acc_id) -> str:
         pass
 
     # Returns all transactions from account if it exists
-    def get_all_transactions_by_ssn_acc_num(ssn, acc_num) -> str:
+    def get_all_transactions_by_ssn_acc_id(ssn, acc_id) -> str:
         pass
 
     # Helper functions to print colored text

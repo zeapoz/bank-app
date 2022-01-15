@@ -13,6 +13,10 @@ def main():
                 get_customer_info()
             case "3":
                 add_account()
+            case "4":
+                deposit()
+            case "5":
+                withdraw()
             case "x":
                 print("Quitting process...")
                 break
@@ -30,19 +34,33 @@ def get_customer_info():
     print(bank.get_customer_info(ssn))
 
 def add_account():
-    ssn = input("Enter customers social security number: ")
-    acc_type = input("Enter type of account: (debit account)").strip()
-    acc_num = input("Enter card number: ")
+    ssn = input("Enter customers social security number: ").strip()
+    acc_type = input("Enter type of account (debit account): ").strip()
+    acc_num = input("Enter card number: ").strip()
     account = Account(acc_type, acc_num)
     bank.add_account(ssn, account)
+
+def deposit():
+    ssn = input("Enter customers social security number: ").strip()
+    acc_id = input("Enter customers account number: ").strip()
+    amount = float(input("Enter deposit amount: ").strip())
+    bank.deposit(ssn, acc_id, amount)
+
+def withdraw():
+    ssn = input("Enter customers social security number: ").strip()
+    acc_id = input("Enter customers account number: ").strip()
+    amount = float(input("Enter withdrawal amount: ").strip())
+    bank.withdraw(ssn, acc_id, amount)
 
 def print_instructions():
     print("\nWhat do you want to do? (Enter corresponding number)")
     print("1: Add a new customer")
     print("2: Get info about a customer")
     print("3: Add a new account to existing customer")
+    print("4: Deposit money to existing customers account")
+    print("5: Withdraw money from existing customers account")
     print("x: Quit program")
-    print("-" * 30)
+    print("-" * 36)
 
 if __name__ == "__main__":
     main()
