@@ -1,4 +1,5 @@
 import os
+from pickletools import read_string1
 import colorama
 
 from customer import *
@@ -64,6 +65,7 @@ class Bank:
         self.print_error("Error: Social security number already exists.")
         return False
 
+    # Fetches customer based on social security number, optional flag to warn if not found
     def get_customer(self, ssn, warn=True) -> Customer:
         customer = self.get_customers().get(ssn)
         if customer:
@@ -75,7 +77,6 @@ class Bank:
 
     # Returns a list of customers information
     def get_customer_info(self, ssn) -> list:
-        # Find customer
         customer = self.get_customer(ssn)
         if customer:
             accounts = [(x.acc_id, x.balance) for x in customer.accounts]
@@ -103,47 +104,61 @@ class Bank:
             else:
                 self.print_error(f"Could not add new account to {customer.name}")
 
-    # Returns a visual representation of all accounts belonging to customer
-    def get_account(ssn, acc_id) -> str:
-        pass
+    # Returns account belonging to customer
+    def get_account(self, customer, acc_id) -> Account:
+        for acc in customer.accounts:
+            if acc.acc_id == acc_id:
+                return acc
+        self.print_error("Error: Account id not matching customers.")
+        return None
 
     # Deposits money into chosen account
     def deposit(self, ssn, acc_id, amount) -> bool:
         customer = self.get_customer(ssn)
-        if customer:
-            for acc in customer.accounts:
-                if acc.acc_id == acc_id:
-                    acc.balance += amount
-                    self.print_success(f"{amount} successfully deposited into account id {acc_id} belonging to {customer.name}")
-                    return True
+        if not customer:
+            return
+        acc = self.get_account(customer, acc_id)
+        print(acc)
+        if acc:
+            acc.deposit(amount)
+            self.print_success(f"{amount} successfully deposited into account id {acc_id} belonging to {customer.name}")
+            return True
         return False
 
     # Withdraws money into chosen account
     def withdraw(self, ssn, acc_id, amount) -> bool:
         customer = self.get_customer(ssn)
-        if customer:
-            for acc in customer.accounts:
-                if acc.acc_id == acc_id:
-                    if acc.balance >= amount:
-                        acc.balance -= amount
-                        self.print_success(f"{amount} successfully deposited into account id {acc_id} belonging to {customer.name}")
-                        return True
-                    else:
-                        self.print_error(f"Insufficent funds for account id {acc_id} belonging to {customer.name}")
-                        return False
+        if not customer:
+            return False
+        acc = self.get_account(customer, acc_id)
+        if acc:
+            if acc.withdraw(amount):
+                self.print_success(f"{amount} successfully withdrawed from account id {acc_id} belonging to {customer.name}")
+                return True
+            else:
+                self.print_error(f"Insufficent funds for account id {acc_id} belonging to {customer.name}")
+                return False
         return False
 
     # Closes active account and returns balance of closed account
-    def close_account(ssn, acc_id) -> str:
-        pass
+    def close_account(self, ssn, acc_id) -> int:
+        customer = self.get_customer(ssn)
+        if not customer:
+            return
+        acc = self.get_account(customer, acc_id)
+        if acc:
+            balance = acc.balance
+            customer.accounts.remove(acc)
+            self.print_success("Account was deleted.")
+            return balance
 
     # Returns all transactions from account if it exists
     def get_all_transactions_by_ssn_acc_id(ssn, acc_id) -> str:
         pass
 
     # Helper functions to print colored text
-    def print_error(self, s):
+    def print_error(self, s) -> None:
         print(f"{colorama.Fore.RED}{s}{colorama.Style.RESET_ALL}")
     
-    def print_success(self, s):
+    def print_success(self, s) -> None:
         print(f"{colorama.Fore.GREEN}{s}{colorama.Style.RESET_ALL}")

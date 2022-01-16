@@ -17,6 +17,8 @@ def main():
                 deposit()
             case "5":
                 withdraw()
+            case "6":
+                close_account()
             case "x":
                 print("Quitting process...")
                 break
@@ -52,6 +54,11 @@ def withdraw():
     amount = float(input("Enter withdrawal amount: ").strip())
     bank.withdraw(ssn, acc_id, amount)
 
+def close_account():
+    ssn = input("Enter customers social security number: ").strip()
+    acc_id = input("Enter customers account number: ").strip()
+    print(f"The closed account had {bank.close_account(ssn, acc_id)}")
+
 def print_instructions():
     print("\nWhat do you want to do? (Enter corresponding number)")
     print("1: Add a new customer")
@@ -59,6 +66,7 @@ def print_instructions():
     print("3: Add a new account to existing customer")
     print("4: Deposit money to existing customers account")
     print("5: Withdraw money from existing customers account")
+    print("6: Close customers account")
     print("x: Quit program")
     print("-" * 36)
 
