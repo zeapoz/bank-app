@@ -1,5 +1,4 @@
 import os
-from pickletools import read_string1
 import colorama
 
 from customer import *
@@ -92,8 +91,16 @@ class Bank:
         return False
 
     # Removes customer and returns that which was removed
-    def remove_customer(ssn) -> list:
-        pass
+    def remove_customer(self, ssn) -> list:
+        customer = self.get_customer(ssn)
+        if not customer:
+            return
+        for acc in customer.accounts:
+            acc_id = acc.acc_id
+            self.close_account(ssn, acc_id)
+        self.customers.remove(customer)
+        self.print_success(f"Successfully removed customer {customer.name}")
+        # TODO return what was removed
 
     # Adds an account to specified customer
     def add_account(self, ssn, account) -> str:
