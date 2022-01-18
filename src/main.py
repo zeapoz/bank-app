@@ -4,6 +4,8 @@ bank = Bank()
 
 def main():
     while True:
+        # Temporary save on change
+        bank.write_to_file("./data.txt")
         print_instructions()
         choice = input().strip()
         match choice:
@@ -24,6 +26,8 @@ def main():
             case "8":
                 get_all_transactions()
             case "x":
+                print("Saving changes...")
+                bank.write_to_file("./data.txt")
                 print("Quitting process...")
                 break
             case _:
@@ -41,10 +45,8 @@ def get_customer_info():
 
 def add_account():
     ssn = input("Enter customers social security number: ").strip()
-    acc_type = input("Enter type of account (debit account): ").strip()
-    acc_num = input("Enter card number: ").strip()
-    account = Account(acc_type, acc_num)
-    bank.add_account(ssn, account)
+    # acc_type = input("Enter type of account (debit account): ").strip()
+    bank.add_account(ssn)
 
 def deposit():
     ssn = input("Enter customers social security number: ").strip()
