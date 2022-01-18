@@ -21,6 +21,8 @@ def main():
                 close_account()
             case "7":
                 remove_customer()
+            case "8":
+                get_all_transactions()
             case "x":
                 print("Quitting process...")
                 break
@@ -65,6 +67,10 @@ def remove_customer():
     ssn = input("Enter customers social security number: ").strip()
     bank.remove_customer(ssn)
 
+def get_all_transactions():
+    for trans in bank.transactions:
+        print(trans)
+
 def print_instructions():
     print("\nWhat do you want to do? (Enter corresponding number)")
     print("1: Add a new customer")
@@ -74,6 +80,7 @@ def print_instructions():
     print("5: Withdraw money from existing customers account")
     print("6: Close customers account")
     print("7: Remove customer")
+    print("8: View all transactions")
     print("x: Quit program")
     print("-" * 36)
 

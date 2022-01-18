@@ -1,8 +1,10 @@
 import os
+import datetime
 import colorama
 
-from customer import *
-from account import *
+from customer import Customer
+from account import Account
+from transaction import Transaction
 
 class Bank:
     def __init__(self) -> None:
@@ -11,6 +13,9 @@ class Bank:
         print(welcome_s)
         print("-" * len(welcome_s))
         self.customers = self._load("./data.txt")
+        # Transaction
+        self.transactions = []
+        self.trans_id_increment = 111111
 
     # Reads text file into customer list
     def _load(self, path) -> list:
@@ -77,24 +82,25 @@ class Bank:
     # Returns a list of customers information
     def get_customer_info(self, ssn) -> list:
         customer = self.get_customer(ssn)
-        if customer:
-            accounts = [(x.acc_id, x.balance) for x in customer.accounts]
-            info = [customer.name, customer.ssn, accounts]
-            return info
+        if not customer:
+            return
+        accounts = [(x.acc_id, x.balance) for x in customer.accounts]
+        info = [customer.name, customer.ssn, accounts]
+        return info
 
     # Changes customer name if ssn exists in database
     def change_customer_name(self, name, ssn) -> bool:
         customer = self.get_customer(ssn)
-        if customer:
-            customer.set_name(name)
-            return True
-        return False
+        if not customer:
+            return
+        customer.set_name(name)
+        return True
 
     # Removes customer and returns that which was removed
     def remove_customer(self, ssn) -> list:
         customer = self.get_customer(ssn)
         if not customer:
-            return
+            return []
         for acc in customer.accounts:
             acc_id = acc.acc_id
             self.close_account(ssn, acc_id)
@@ -105,11 +111,12 @@ class Bank:
     # Adds an account to specified customer
     def add_account(self, ssn, account) -> str:
         customer = self.get_customer(ssn)
-        if customer:
-            if customer.add_account(account):
-                self.print_success(f"Successfully added new account to {customer.name}")
-            else:
-                self.print_error(f"Could not add new account to {customer.name}")
+        if not customer:
+            return
+        if customer.add_account(account):
+            self.print_success(f"Successfully added new account to {customer.name}")
+        else:
+            self.print_error(f"Could not add new account to {customer.name}")
 
     # Returns account belonging to customer
     def get_account(self, customer, acc_id) -> Account:
@@ -125,9 +132,8 @@ class Bank:
         if not customer:
             return
         acc = self.get_account(customer, acc_id)
-        print(acc)
-        if acc:
-            acc.deposit(amount)
+        if acc.deposit(amount):
+            self.add_transaction(ssn, acc_id, amount)
             self.print_success(f"{amount} successfully deposited into account id {acc_id} belonging to {customer.name}")
             return True
         return False
@@ -138,14 +144,15 @@ class Bank:
         if not customer:
             return False
         acc = self.get_account(customer, acc_id)
-        if acc:
-            if acc.withdraw(amount):
-                self.print_success(f"{amount} successfully withdrawed from account id {acc_id} belonging to {customer.name}")
-                return True
-            else:
-                self.print_error(f"Insufficent funds for account id {acc_id} belonging to {customer.name}")
-                return False
-        return False
+        if not acc:
+            return False
+        if acc.withdraw(amount):
+            self.add_transaction(ssn, acc_id, amount, True)
+            self.print_success(f"{amount} successfully withdrawed from account id {acc_id} belonging to {customer.name}")
+            return True
+        else:
+            self.print_error(f"Insufficent funds for account id {acc_id} belonging to {customer.name}")
+            return False
 
     # Closes active account and returns balance of closed account
     def close_account(self, ssn, acc_id) -> int:
@@ -153,15 +160,23 @@ class Bank:
         if not customer:
             return
         acc = self.get_account(customer, acc_id)
-        if acc:
-            balance = acc.balance
-            customer.accounts.remove(acc)
-            self.print_success("Account was deleted.")
-            return balance
+        if not acc:
+            return
+        balance = acc.balance
+        customer.accounts.remove(acc)
+        self.print_success("Account was deleted.")
+        return balance
 
     # Returns all transactions from account if it exists
     def get_all_transactions_by_ssn_acc_id(ssn, acc_id) -> str:
         pass
+
+    def add_transaction(self, cus_id, acc_id, amount, withdraw=False) -> None:
+        now = datetime.datetime.now()
+        if withdraw:
+            amount *= -1
+        transaction = Transaction(self.trans_id_increment, cus_id, acc_id, now, amount)
+        self.transactions.append(transaction)
 
     # Helper functions to print colored text
     def print_error(self, s) -> None:

@@ -4,8 +4,9 @@ class Account:
         self.acc_id = acc_id
         self.balance = balance
     
-    def deposit(self, amount) -> None:
+    def deposit(self, amount) -> bool:
         self.balance += amount
+        return True
     
     def withdraw(self, amount) -> bool:
         if self.balance >= amount:
