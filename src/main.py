@@ -1,3 +1,6 @@
+from copy import copy
+import enum
+from math import fabs
 from bank import *
 
 bank = Bank()
@@ -48,17 +51,32 @@ def add_account():
     # acc_type = input("Enter type of account (debit account): ").strip()
     bank.add_account(ssn)
 
+def get_customer_accounts(ssn):
+    # Returns customers account in human-readable format
+    cus = bank.get_customer(ssn)
+    acc_enum = list(enumerate(cus.accounts, 1))
+    for i, acc in acc_enum:
+        print(f"{i}: Account #{i}, balance: {acc.balance}")
+    choice = int(input("Choose an account: "))
+    if choice < 1 or choice > len(acc_enum):
+        print_error("Error: Not a valid choice.")
+        return False
+    _, acc = acc_enum[choice - 1]
+    return acc.acc_id
+
 def deposit():
     ssn = input("Enter customers social security number: ").strip()
-    acc_id = input("Enter customers account number: ").strip()
-    amount = float(input("Enter deposit amount: ").strip())
-    bank.deposit(ssn, acc_id, amount)
+    acc_id = get_customer_accounts(ssn)
+    if acc_id:
+        amount = float(input("Enter deposit amount: ").strip())
+        bank.deposit(ssn, acc_id, amount)
 
 def withdraw():
     ssn = input("Enter customers social security number: ").strip()
-    acc_id = input("Enter customers account number: ").strip()
-    amount = float(input("Enter withdrawal amount: ").strip())
-    bank.withdraw(ssn, acc_id, amount)
+    acc_id = get_customer_accounts(ssn)
+    if acc_id:
+        amount = float(input("Enter withdrawal amount: ").strip())
+        bank.withdraw(ssn, acc_id, amount)
 
 def close_account():
     ssn = input("Enter customers social security number: ").strip()
