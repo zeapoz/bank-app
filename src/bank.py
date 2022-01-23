@@ -77,8 +77,7 @@ class Bank:
         customer = self.get_customer(ssn)
         if not customer:
             return
-        accounts = [(x.acc_type, x.acc_id, x.balance) for x in customer.accounts]
-        info = [customer.name, customer.ssn, accounts]
+        info = [customer.name, customer.ssn]
         return info
 
     # Changes customer name if ssn exists in database

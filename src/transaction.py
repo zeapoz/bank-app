@@ -8,4 +8,4 @@ class Transaction:
         pass
 
     def __str__(self) -> str:
-        return f"{self.id} {self.cus_id} {self.acc_id}\n{self.date}\n{self.amount}"
+        return f"{self.id} {self.cus_id} {self.acc_id}\n{self.date}\n{self.amount}\n"

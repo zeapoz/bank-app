@@ -25,6 +25,10 @@ def main():
                 remove_customer()
             case "8":
                 get_all_transactions()
+            case "9":
+                get_all_customers()
+            case "10":
+                change_customers_name()
             case "x":
                 print("Saving changes...")
                 bank.write_to_file("./data.txt")
@@ -41,19 +45,27 @@ def add_customer():
 
 def get_customer_info():
     ssn = input("Enter their social security number: ").strip()
-    print(bank.get_customer_info(ssn))
+    info = bank.get_customer_info(ssn)
+    print(f"Name: {info[0]}, SSN: {info[1]}")
+    get_customer_accounts(ssn, True)
 
 def add_account():
     ssn = input("Enter customers social security number: ").strip()
     # acc_type = input("Enter type of account (debit account): ").strip()
     bank.add_account(ssn)
 
-def get_customer_accounts(ssn):
+def get_customer_accounts(ssn, only_print=False):
     # Returns customers account in human-readable format
     cus = bank.get_customer(ssn)
     acc_enum = list(enumerate(cus.accounts, 1))
+    if len(acc_enum) <= 0:
+        print_error("Customer has no accounts.")
+        return
+    # Iterate through enumerized list to get index and account
     for i, acc in acc_enum:
-        print(f"{i}: Account #{i}, balance: {acc.balance}")
+        print(f"{i}: {acc.acc_type.capitalize()} #{i}, balance: {acc.balance}")
+    if only_print:
+        return
     choice = int(input("Choose an account: "))
     if choice < 1 or choice > len(acc_enum):
         print_error("Error: Not a valid choice.")
@@ -77,8 +89,9 @@ def withdraw():
 
 def close_account():
     ssn = input("Enter customers social security number: ").strip()
-    acc_id = input("Enter customers account number: ").strip()
-    print(f"The closed account had {bank.close_account(ssn, acc_id)}")
+    acc_id = get_customer_accounts(ssn)
+    if acc_id:
+        print(f"The closed account had {bank.close_account(ssn, acc_id)} funds.")
 
 def remove_customer():
     ssn = input("Enter customers social security number: ").strip()
@@ -87,6 +100,18 @@ def remove_customer():
 def get_all_transactions():
     for trans in bank.transactions:
         print(trans)
+
+def get_all_customers():
+    customers = bank.get_customers()
+    print("\nSSN, Name")
+    for c in customers.keys():
+        print(f"{c}, {customers[c][0]}")
+    
+def change_customers_name():
+    ssn = input("Enter customers social security number: ").strip()
+    new_name = input("Enter customers new name: ")
+    if bank.change_customer_name(new_name, ssn):
+        print_success(f"Name was successfully changed to {new_name}")
 
 def print_instructions():
     print("\nWhat do you want to do? (Enter corresponding number)")
@@ -98,6 +123,8 @@ def print_instructions():
     print("6: Close customers account")
     print("7: Remove customer")
     print("8: View all transactions")
+    print("9: Show list of all customers")
+    print("10: Change customers name")
     print("x: Quit program")
     print("-" * 36)
 
