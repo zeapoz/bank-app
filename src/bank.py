@@ -15,29 +15,18 @@ class Bank:
         # Transaction and increments
         self.transactions = []
         self.trans_id_increment = 1
-        self.cus_id_increment = 1
-        self.acc_id_increment = 1
         # Create connection to a generic data source
         self.data_source = DataSource("./data.txt")
         # Load data
-        self.customers = self._load("./data.txt")
+        database_data = self._load()
+        self.customers = database_data[0]
+        self.cus_id_increment = database_data[1][0]
+        self.acc_id_increment = database_data[1][1]
 
     # Reads text file into customer list
-    def _load(self, path) -> list:
+    def _load(self) -> list:
         # Call DataSource method to get all customers into internal memory
-        return self.data_source.get_all(open(path))
-
-    # Write current state file at path
-    def write_to_file(self, path) -> None:
-        file = open(path, "w")
-        lines = []
-        for c in self.customers:
-            s = f"{c.id}:{c.name}:{c.ssn}"
-            for a in c.accounts:
-                s += f"#{a.acc_id}:{a.acc_type}:{a.balance}"
-            lines.append(f"{s}\n")
-        file.writelines(lines)
-        file.close()
+        return self.data_source.get_all()
 
     # Return all customers in dict {Social Security Number: name}
     def get_customers(self) -> dict:
@@ -161,8 +150,12 @@ class Bank:
         print_success("Account was deleted.")
         return balance
 
+    def write_to_file(self) -> None:
+        self.data_source.write_customers_to_file(self.customers)
+        # TODO Write transactions to file
+
     # Returns all transactions from account if it exists
-    def get_all_transactions_by_ssn_acc_id(self, ssn, acc_id) -> list():
+    def get_all_transactions_by_ssn_acc_id(self, ssn, acc_id) -> list:
         customer = self.get_customer(ssn)
         transactions = []
         for t in customer.transactions:
@@ -179,4 +172,3 @@ class Bank:
         # Add transaction to customer as well
         customer = self.get_customer(ssn)
         customer.add_transaction(transaction)
-        # TODO Write transactions to file

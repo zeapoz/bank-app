@@ -5,7 +5,7 @@ bank = Bank()
 def main():
     while True:
         # Temporary save on change
-        bank.write_to_file("./data.txt")
+        bank.write_to_file()
         print_instructions()
         choice = input().strip()
         match choice:
@@ -33,7 +33,7 @@ def main():
                 get_transactions_from_account()
             case "x":
                 print("Saving changes...")
-                bank.write_to_file("./data.txt")
+                bank.write_to_file()
                 print("Quitting process...")
                 break
             case _:
