@@ -162,13 +162,21 @@ class Bank:
         return balance
 
     # Returns all transactions from account if it exists
-    def get_all_transactions_by_ssn_acc_id(ssn, acc_id) -> list():
-        pass
+    def get_all_transactions_by_ssn_acc_id(self, ssn, acc_id) -> list():
+        customer = self.get_customer(ssn)
+        transactions = []
+        for t in customer.transactions:
+            if t.acc_id == acc_id:
+                transactions.append(t)
+        return transactions
 
-    def add_transaction(self, cus_id, acc_id, amount, withdraw=False) -> None:
+    def add_transaction(self, ssn, acc_id, amount, withdraw=False) -> None:
         now = datetime.datetime.now()
         if withdraw:
             amount *= -1
-        transaction = Transaction(self.trans_id_increment, cus_id, acc_id, now, amount)
+        transaction = Transaction(self.trans_id_increment, ssn, acc_id, now, amount)
         self.transactions.append(transaction)
+        # Add transaction to customer as well
+        customer = self.get_customer(ssn)
+        customer.add_transaction(transaction)
         # TODO Write transactions to file

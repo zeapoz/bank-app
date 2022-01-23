@@ -29,6 +29,8 @@ def main():
                 get_all_customers()
             case "10":
                 change_customers_name()
+            case "11":
+                get_transactions_from_account()
             case "x":
                 print("Saving changes...")
                 bank.write_to_file("./data.txt")
@@ -113,6 +115,15 @@ def change_customers_name():
     if bank.change_customer_name(new_name, ssn):
         print_success(f"Name was successfully changed to {new_name}")
 
+def get_transactions_from_account():
+    ssn = input("Enter customers social security number: ").strip()
+    acc_id = get_customer_accounts(ssn)
+    if not acc_id:
+        return
+    transactions = bank.get_all_transactions_by_ssn_acc_id(ssn, acc_id)
+    for t in transactions:
+        print(t)
+
 def print_instructions():
     print("\nWhat do you want to do? (Enter corresponding number)")
     print("1: Add a new customer")
@@ -125,6 +136,7 @@ def print_instructions():
     print("8: View all transactions")
     print("9: Show list of all customers")
     print("10: Change customers name")
+    print("11: View all transaction from account")
     print("x: Quit program")
     print("-" * 36)
 
