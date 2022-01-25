@@ -12,21 +12,21 @@ class Bank:
         print("-" * len(welcome_s))
         print(welcome_s)
         print("-" * len(welcome_s))
-        # Transaction and increments
-        self.transactions = []
-        self.trans_id_increment = 1
         # Create connection to a generic data source
-        self.data_source = DataSource("./data.txt")
+        self.data_source = DataSource("./data/customers.txt", "./data/transactions.txt")
         # Load data
-        database_data = self._load()
+        database_data = self.data_source.get_all()
         self.customers = database_data[0]
         self.cus_id_increment = database_data[1][0]
         self.acc_id_increment = database_data[1][1]
-
-    # Reads text file into customer list
-    def _load(self) -> list:
-        # Call DataSource method to get all customers into internal memory
-        return self.data_source.get_all()
+        # Also load history of transactions made
+        trans_data = self.data_source.load_transactions()
+        self.transactions = trans_data[0]
+        self.trans_id_increment = trans_data[1]
+        # Add loaded transactions to respective customer
+        for t in self.transactions:
+            customer = self.get_customer(t.cus_id)
+            customer.add_transaction(t)
 
     # Return all customers in dict {Social Security Number: name}
     def get_customers(self) -> dict:
@@ -152,7 +152,7 @@ class Bank:
 
     def write_to_file(self) -> None:
         self.data_source.write_customers_to_file(self.customers)
-        # TODO Write transactions to file
+        self.data_source.write_transactions_to_file(self.transactions)
 
     # Returns all transactions from account if it exists
     def get_all_transactions_by_ssn_acc_id(self, ssn, acc_id) -> list:

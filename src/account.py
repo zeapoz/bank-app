@@ -13,3 +13,6 @@ class Account:
             self.balance -= amount
             return True
         return False
+
+    def __str__(self) -> str:
+        return f"{self.acc_type} {self.acc_id} {self.balance}"
