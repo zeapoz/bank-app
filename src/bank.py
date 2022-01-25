@@ -3,7 +3,7 @@ import datetime
 from customer import Customer
 from account import Account
 from transaction import Transaction
-from data_source import DataSource
+from text_source import TextSource
 from display import *
 
 class Bank:
@@ -13,7 +13,7 @@ class Bank:
         print(welcome_s)
         print("-" * len(welcome_s))
         # Create connection to a generic data source
-        self.data_source = DataSource("./data/customers.txt", "./data/transactions.txt")
+        self.data_source = TextSource("./data/customers.txt", "./data/transactions.txt")
         # Load data
         database_data = self.data_source.get_all()
         self.customers = database_data[0]
