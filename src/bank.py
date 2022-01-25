@@ -9,9 +9,9 @@ from display import *
 class Bank:
     def __init__(self) -> None:
         welcome_s = "| Welcome to the bank application! |"
-        print("-" * len(welcome_s))
+        print_accent("-" * len(welcome_s))
         print(welcome_s)
-        print("-" * len(welcome_s))
+        print_accent("-" * len(welcome_s))
         # Create connection to a generic data source
         self.data_source = TextSource("./data/customers.txt", "./data/transactions.txt")
         # Load data

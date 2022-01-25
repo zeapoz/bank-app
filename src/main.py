@@ -9,28 +9,31 @@ def main():
         print_instructions()
         choice = input().strip()
         match choice:
+            # Customer
             case "1":
-                add_customer()
-            case "2":
                 get_customer_info()
+            case "2":
+                add_customer()
             case "3":
-                add_account()
-            case "4":
-                deposit()
-            case "5":
-                withdraw()
-            case "6":
-                close_account()
-            case "7":
                 remove_customer()
-            case "8":
-                get_all_transactions()
-            case "9":
-                get_all_customers()
-            case "10":
+            case "4":
                 change_customers_name()
-            case "11":
+            case "5":
+                get_all_customers()
+            # Account
+            case "6":
+                deposit()
+            case "7":
+                withdraw()
+            case "8":
+                add_account()
+            case "9":
+                close_account()
+            # Transaction
+            case "10":
                 get_transactions_from_account()
+            case "11":
+                get_all_transactions()
             case "x":
                 print("Saving changes...")
                 bank.write_to_file()
@@ -125,18 +128,23 @@ def get_transactions_from_account():
         print(t)
 
 def print_instructions():
-    print("\nWhat do you want to do? (Enter corresponding number)")
-    print("1: Add a new customer")
-    print("2: Get info about a customer")
-    print("3: Add a new account to existing customer")
-    print("4: Deposit money to existing customers account")
-    print("5: Withdraw money from existing customers account")
-    print("6: Close customers account")
-    print("7: Remove customer")
-    print("8: View all transactions")
-    print("9: Show list of all customers")
-    print("10: Change customers name")
-    print("11: View all transaction from account")
+    print("\n" + "-" * 36)
+    print_accent("What do you want to do? (Enter corresponding number)")
+    print_accent("Customer operations:")
+    print("1: Get info about a customer")
+    print("2: Add a new customer")
+    print("3: Remove customer")
+    print("4: Change customers name")
+    print("5: Show list of all customers")
+    print_accent("Account operations:")
+    print("6: Deposit money to existing customers account")
+    print("7: Withdraw money from existing customers account")
+    print("8: Add a new account to existing customer")
+    print("9: Close customers account")
+    print_accent("Transaction info operations:")
+    print("10: View all transaction from account")
+    print("11: View all transactions")
+    print_accent("Other:")
     print("x: Quit program")
     print("-" * 36)
 

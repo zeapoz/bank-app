@@ -6,3 +6,6 @@ def print_error(s) -> None:
 
 def print_success(s) -> None:
     print(f"{c.Fore.GREEN}{s}{c.Style.RESET_ALL}")
+
+def print_accent(s) -> None:
+    print(f"{c.Fore.BLUE}{s}{c.Style.RESET_ALL}")
