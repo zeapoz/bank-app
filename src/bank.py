@@ -131,7 +131,7 @@ class Bank:
             return False
         if acc.withdraw(amount):
             self.add_transaction(ssn, acc_id, amount, True)
-            print_success(f"{amount} successfully withdrawed from account id {acc_id} belonging to {customer.name}")
+            print_success(f"{amount} successfully withdrew from account id {acc_id} belonging to {customer.name}")
             return True
         else:
             print_error(f"Insufficent funds for account id {acc_id} belonging to {customer.name}")
@@ -172,3 +172,7 @@ class Bank:
         # Add transaction to customer as well
         customer = self.get_customer(ssn)
         customer.add_transaction(transaction)
+
+if __name__ == "__main__":
+    print_error("This python script is not meant to be run directly, please import in another class!")
+    quit()

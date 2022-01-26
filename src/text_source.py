@@ -78,12 +78,13 @@ class TextSource(DataSource):
         with open(self.trans_path) as file:
             for l in file.readlines():
                 # Split data and assign
-                data = l.split(":")
+                data = l.split(",")
                 id = data[0]
                 cus_id = data[1]
                 acc_id = data[2]
                 date = data[3]
                 amount = data[4].strip()
+                print(amount)
                 t = Transaction(id, cus_id, acc_id, date, amount)
                 transactions.append(t)
                 # Set incrementent
@@ -96,6 +97,10 @@ class TextSource(DataSource):
          with open(self.trans_path, "w") as file:
             lines = []
             for t in transactions:
-                s = f"{t.id}:{t.cus_id}:{t.acc_id}:{t.date}:{t.amount}"
+                s = f"{t.id},{t.cus_id},{t.acc_id},{t.date},{t.amount}"
                 lines.append(f"{s}\n")
             file.writelines(lines)
+
+if __name__ == "__main__":
+    print_error("This python script is not meant to be run directly, please import in another class!")
+    quit()

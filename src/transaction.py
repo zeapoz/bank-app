@@ -1,3 +1,5 @@
+from display import *
+
 class Transaction:
     def __init__(self, id, cus_id, acc_id, date, amount) -> None:
         self.id = id
@@ -8,4 +10,8 @@ class Transaction:
         pass
 
     def __str__(self) -> str:
-        return f"ID: {self.id}\nDate: {self.date}\n{self.amount}"
+        return f"\nAccount ID: {self.acc_id}\nDate: {self.date}\n{self.amount}"
+
+if __name__ == "__main__":
+    print_error("This python script is not meant to be run directly, please import in another class!")
+    quit()

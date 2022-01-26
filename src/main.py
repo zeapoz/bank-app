@@ -51,17 +51,20 @@ def add_customer():
 def get_customer_info():
     ssn = input("Enter their social security number: ").strip()
     info = bank.get_customer_info(ssn)
+    if not info:
+        return
     print(f"Name: {info[0]}, SSN: {info[1]}")
     get_customer_accounts(ssn, True)
 
 def add_account():
     ssn = input("Enter customers social security number: ").strip()
-    # acc_type = input("Enter type of account (debit account): ").strip()
     bank.add_account(ssn)
 
 def get_customer_accounts(ssn, only_print=False):
     # Returns customers account in human-readable format
     cus = bank.get_customer(ssn)
+    if not cus:
+        return
     acc_enum = list(enumerate(cus.accounts, 1))
     if len(acc_enum) <= 0:
         print_error("Customer has no accounts.")

@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 
+from display import *
 from customer import Customer
 
 class DataSource(ABC):
@@ -27,3 +28,7 @@ class DataSource(ABC):
     # Removes customer based on id
     def remove_by_id(self, id) -> list:
         pass
+
+if __name__ == "__main__":
+    print_error("This python script is not meant to be run directly, please import in another class!")
+    quit()
