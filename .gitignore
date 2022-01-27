@@ -2,5 +2,3 @@
 /docs
 # Cache files for python classes
 /src/__pycache__
-# Mockup-data
-/data
