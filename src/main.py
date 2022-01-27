@@ -1,12 +1,16 @@
-from bank import *
+from display import *
+from bank import Bank
+from text_source import TextSource
 
-bank = Bank()
+data_source = TextSource("./data/customers.txt", "./data/transactions.txt")
+bank = Bank(data_source)
 
 def main():
     while True:
-        # Temporary save on change
+        # Save data and print instructions
         bank.write_to_file()
         print_instructions()
+
         choice = input().strip()
         match choice:
             # Customer

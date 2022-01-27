@@ -2,18 +2,18 @@ import datetime
 
 from customer import Customer
 from account import Account
+from data_source import DataSource
 from transaction import Transaction
-from text_source import TextSource
 from display import *
 
 class Bank:
-    def __init__(self) -> None:
+    def __init__(self, data_source: DataSource) -> None:
         welcome_s = "| Welcome to the bank application! |"
         print_accent("-" * len(welcome_s))
         print(welcome_s)
         print_accent("-" * len(welcome_s))
         # Create connection to a generic data source
-        self.data_source = TextSource("./data/customers.txt", "./data/transactions.txt")
+        self.data_source = data_source
         # Load data
         database_data = self.data_source.get_all()
         self.customers = database_data[0]

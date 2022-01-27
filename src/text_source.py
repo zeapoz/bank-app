@@ -84,7 +84,6 @@ class TextSource(DataSource):
                 acc_id = data[2]
                 date = data[3]
                 amount = data[4].strip()
-                print(amount)
                 t = Transaction(id, cus_id, acc_id, date, amount)
                 transactions.append(t)
                 # Set incrementent
